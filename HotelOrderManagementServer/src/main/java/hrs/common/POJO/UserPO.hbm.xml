@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-10-18 21:26:32 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping package="hrs.common.POJO">
+    <class name="UserPO" table="USER">
+        <id name="id" type="int">
+            <column name="USER_ID" />
+            <generator class="native" />
+        </id>
+        <property name="username" type="java.lang.String" unique="true">
+            <column name="USER_USERNAME" />
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="USER_PWD" />
+        </property>
+        <property name="phone" type="java.lang.String">
+            <column name="USER_PHONE" />
+        </property>
+        <property name="name" type="java.lang.String">
+            <column name="USER_NAME" />
+        </property>
+        <property name="credit" type="double">
+            <column name="USER_CREDIT" />
+        </property>
+        <property name="birthDate" type="date">
+            <column name="USER_BIRTHDATE" />
+        </property>
+        <property name="enterprise" type="java.lang.String">
+            <column name="USER_ENTERPRISE" />
+        </property>
+        <property name="VIPLevel" type="int">
+            <column name="USER_LEVEL" />
+        </property>
+        <property name="type">
+            <column name="USER_TYPE" />
+            <type name="org.hibernate.type.EnumType">
+                <param name="type">12</param>
+                <param name="enumClass">hrs.common.util.type.UserType</param>
+            </type>
+        </property>
+    </class>
+</hibernate-mapping>

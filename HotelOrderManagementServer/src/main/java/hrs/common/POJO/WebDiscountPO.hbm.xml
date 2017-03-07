@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-10-28 18:09:30 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping package="hrs.common.POJO">
+	<class name="WebDiscountPO" table="WEBSITE_DISCOUNT">
+		<id name="id" type="int">
+			<column name="DISCOUNT_ID" />
+			<generator class="native" />
+		</id>
+		<property name="discount" type="double">
+			<column name="DISCOUNT_DISC" />
+		</property>
+		<property name="type">
+			<column name="DISCOUNT_TYPE" />
+			<type name="org.hibernate.type.EnumType">
+				<param name="type">12</param>
+				<param name="enumClass">hrs.common.util.type.WebsiteDiscountType</param>
+			</type>
+		</property>
+		
+		<many-to-one name="commercialCircle" class="CommercialCirclePO"
+			fetch="join">
+			<column name="discount_commercial_circle" />
+		</many-to-one>
+		<many-to-one name="location" class="LocationPO"
+			fetch="join">
+			<column name="discount_location"></column>
+		</many-to-one>
+		<property name="beginTime" type="java.util.Date">
+			<column name="discount_begin_time" />
+		</property>
+		<property name="endTime" type="java.util.Date">
+			<column name="discount_end_time" />
+		</property>
+		<property name="VIPlevel" type="int">
+			<column name="discount_VIPlevel" />
+		</property>
+	</class>
+</hibernate-mapping>

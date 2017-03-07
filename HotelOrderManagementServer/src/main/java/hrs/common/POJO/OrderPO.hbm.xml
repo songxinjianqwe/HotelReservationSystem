@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-10-28 18:09:30 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping package="hrs.common.POJO">
+    <class name="OrderPO" table="HOTEL_ORDER">
+        <id name="id" type="int">
+            <column name="ORDER_ID" />
+            <generator class="native" />
+        </id>
+        <property name="placeTime" type="java.util.Date">
+            <column name="ORDER_PLACE_TIME" />
+        </property>
+        <property name="execTime" type="java.util.Date">
+            <column name="ORDER_EXEC_TIME" />
+        </property>
+        <property name="checkinTime" type="java.util.Date">
+            <column name="ORDER_CHECKIN_TIME" />
+        </property>
+        <property name="expectedCheckoutTime" type="java.util.Date">
+            <column name="ORDER_EXPECTED_CHECKOUT_TIME" />
+        </property>
+        <property name="checkoutTime" type="java.util.Date">
+            <column name="ORDER_CHECKOUT_TIME" />
+        </property>
+        <property name="revokeTime" type="java.util.Date">
+            <column name="ORDER_REVOKE_TIME" />
+        </property>
+        <property name="status">
+            <column name="ORDER_STATUS" />
+            <type name="org.hibernate.type.EnumType">
+                <param name="type">12</param>
+                <param name="enumClass">hrs.common.util.type.OrderStatus</param>
+            </type>
+        </property>
+        <many-to-one name="hotel" class="HotelPO" lazy="proxy">
+            <column name="ORDER_HOTEL" />
+        </many-to-one>
+        <property name="value" type="double">
+            <column name="ORDER_VALUE" />
+        </property>
+        <property name="type">
+            <column name="ORDER_ROOM_TYPE" />
+            <type name="org.hibernate.type.EnumType">
+                <param name="type">12</param>
+                <param name="enumClass">hrs.common.util.type.RoomType</param>
+            </type>
+        </property>
+        <property name="roomNum" type="int" access="field">
+            <column name="ORDER_ROOM_NUM" />
+        </property>
+        <property name="hasChild" type="boolean">
+            <column name="ORDER_HAS_CHILD" />
+        </property>
+        <many-to-one name="user" class="UserPO" lazy="false">
+            <column name="order_tenant" />
+        </many-to-one>
+        <property name="score" type="int">
+            <column name="order_score" />
+        </property>
+        <property name="evaluation" type="java.lang.String">
+            <column name="order_evaluation" />
+        </property>
+        <property name="peopleNum" type="int">
+            <column name="order_people_num" />
+        </property>
+    </class>
+</hibernate-mapping>

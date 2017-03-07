@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+	<context:component-scan base-package="hrs.common"></context:component-scan>
+	<context:component-scan base-package="hrs.server"></context:component-scan>
+	<context:component-scan base-package="test.server"></context:component-scan>
+	
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl"
+			value="jdbc:mysql://localhost:3306/hotelreservationsystem?serverTimezone=UTC" />
+		<property name="user" value="root" />
+		<property name="password" value="130119" />
+		<property name="initialPoolSize" value="10" />
+		<property name="maxPoolSize" value="20" />
+		<property name="minPoolSize" value="5" />
+	</bean>
+	
+	<!-- 配置SessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+		autowire="byType">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation" value="classpath:hibernate.cfg.xml"></property>
+		<property name="mappingResources">
+			<list>
+				<value>hrs/common/POJO/UserPO.hbm.xml</value>
+				<value>hrs/common/POJO/EnterprisePO.hbm.xml</value>
+				<value>hrs/common/POJO/StaffPO.hbm.xml</value>
+				<value>hrs/common/POJO/LocationPO.hbm.xml</value>
+				<value>hrs/common/POJO/CommercialCirclePO.hbm.xml</value>
+				<value>hrs/common/POJO/CreditRecordPO.hbm.xml</value>
+				<value>hrs/common/POJO/OrderPO.hbm.xml</value>
+				<value>hrs/common/POJO/HotelPO.hbm.xml</value>
+				<value>hrs/common/POJO/RoomPO.hbm.xml</value>
+				<value>hrs/common/POJO/HotelDiscountPO.hbm.xml</value>
+				<value>hrs/common/POJO/WebDiscountPO.hbm.xml</value>
+				<value>hrs/common/POJO/OfflineRecordPO.hbm.xml</value>
+				<value>hrs/common/POJO/AvailableRoomPO.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 配置声明式事务 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<!-- 基于注解 声明式事务管理配置 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	
+	<!-- 配置bean 注意使用xml的自动装配 -->
+	<bean id="loginController" class="hrs.server.Controller.LoginController.LoginController"></bean>
+	<bean id="userController" class="hrs.server.Controller.UserController.UserController"></bean>
+	<bean id="userHotelController"
+		class="hrs.server.Controller.UserController.UserHotelController"></bean>
+	<bean id="userOrderController"
+		class="hrs.server.Controller.UserController.UserOrderController"></bean>
+	<bean id="hotelController" class="hrs.server.Controller.HotelController.HotelController"></bean>
+	<bean id="hotelDiscountController"
+		class="hrs.server.Controller.HotelController.HotelDiscountController"></bean>
+	<bean id="hotelOrderController"
+		class="hrs.server.Controller.HotelController.HotelOrderController"></bean>
+	<bean id="offlineRecordController"
+		class="hrs.server.Controller.HotelController.OfflineRecordController"></bean>
+	<bean id="roomController" class="hrs.server.Controller.HotelController.RoomController"></bean>
+	<bean id="webCreditController"
+		class="hrs.server.Controller.WebMarketController.WebCreditController"></bean>
+	<bean id="webDiscountController"
+		class="hrs.server.Controller.WebMarketController.WebDiscountController"></bean>
+	<bean id="webOrderController"
+		class="hrs.server.Controller.WebMarketController.WebOrderController"></bean>
+	<bean id="webStaffController"
+		class="hrs.server.Controller.WebStaffController.WebStaffController"></bean>
+	<bean id="webUserController"
+		class="hrs.server.Controller.WebStaffController.WebUserController"></bean>
+	<!-- ************************以上为Controller的配置***************** -->
+
+	<bean id="cacheManagerEhcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation">
+        	<value>classpath:ehcache.xml</value>
+        </property>
+        <!-- 由于hibernate也使用了Ehcache, 保证双方都使用同一个缓存管理器 -->
+        <property name="shared" value="true"/>
+    </bean>
+
+	<!-- 配置RMI -->
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="LoginController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="loginController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.LoginController.ILoginController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="UserController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="userController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.UserController.IUserController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="UserHotelController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="userHotelController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.UserController.IUserHotelController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="UserOrderController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="userOrderController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.UserController.IUserOrderController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="HotelController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="hotelController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.HotelController.IHotelController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="HotelDiscountController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="hotelDiscountController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.HotelController.IHotelDiscountController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="HotelOrderController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="hotelOrderController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.HotelController.IHotelOrderController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="OfflineRecordController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="offlineRecordController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.HotelController.IOfflineRecordController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="RoomController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="roomController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.HotelController.IRoomController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="WebCreditController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="webCreditController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.WebMarketController.IWebCreditController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="WebDiscountController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="webDiscountController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.WebMarketController.IWebDiscountController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="WebOrderController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="webOrderController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.WebMarketController.IWebOrderController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="WebStaffController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="webStaffController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.WebStaffController.IWebStaffController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- RMI服务名称,可自定义服务名称 ，给客户端调用的 -->
+		<property name="serviceName" value="WebUserController" />
+		<!-- 导出实体 -->
+		<property name="service" ref="webUserController" />
+		<!-- 导出接口 -->
+		<property name="serviceInterface"
+			value="hrs.common.Controller.WebStaffController.IWebUserController" />
+		<!-- spring默认使用1099端口 -->
+		<property name="registryPort" value="1199" />
+	</bean>
+
+	<!-- ***************************************************************** -->
+	<!-- 配置Quartz触发器 -->
+	<bean name="startQuertz" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="myJobTrigger" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 配置调度 -->
+	<bean id="myJobTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="myJobDetail" />
+		</property>
+		<property name="cronExpression">
+			<!--middle night 24. do it -->
+			<value>0 */1 * * * ?</value>
+		</property>
+	</bean>
+
+	<!-- job的配置开始 -->
+	<bean id="myJobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="checkAbNormalOrderJob" />
+		</property>
+		<property name="targetMethod">
+			<value>execute</value>
+		</property>
+	</bean>
+	<!-- 任务类 -->
+	<bean id="checkAbNormalOrderJob" class="hrs.server.util.CheckAbNormalOrderJob" />
+
+
+</beans>

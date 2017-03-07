@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-10-28 18:09:30 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping package="hrs.common.POJO">
+    <class name="HotelDiscountPO" table="HOTEL_DISCOUNT">
+        <id name="id" type="int">
+            <column name="DISCOUNT_ID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="hotel" class="HotelPO" fetch="join">
+            <column name="DISCOUNT_HOTEL" />
+        </many-to-one>
+        
+        <property name="discount" type="double">
+            <column name="DISCOUNT_DISC" />
+        </property>
+        
+        <property name="type">
+            <column name="discount_type" />
+            <type name="org.hibernate.type.EnumType">
+                <param name="type">12</param>
+                <param name="enumClass">hrs.common.util.type.HotelDiscountType</param>
+            </type>
+        </property>
+        
+        <many-to-one name="enterprise" class="EnterprisePO" fetch="join">
+            <column name="DISCOUNT_ENTERPRISE" />
+        </many-to-one>
+        
+        <property name="minQty" type="int">
+            <column name="DISCOUNT_MIN_QTY" />
+        </property>
+        <property name="beginTime" type="java.util.Date">
+            <column name="DISCOUNT_BEGIN_TIME" />
+        </property>
+        <property name="endTime" type="java.util.Date">
+            <column name="DISCOUNT_END_TIME" />
+        </property>
+    </class>
+</hibernate-mapping>

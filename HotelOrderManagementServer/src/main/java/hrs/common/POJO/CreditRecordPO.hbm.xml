@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-10-28 18:09:30 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping package="hrs.common.POJO">
+    <class name="CreditRecordPO" table="CREDIT_RECORD">
+        <id name="id" type="int">
+            <column name="RECORD_ID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="order" class="OrderPO" lazy="proxy">
+            <column name="RECORD_ORDER" />
+        </many-to-one>
+        
+        <many-to-one name="user" class="UserPO" lazy="false">
+            <column name="RECORD_USER" />
+        </many-to-one>
+        
+        <property name="type">
+            <column name="record_type" />
+            <type name="org.hibernate.type.EnumType">
+                <param name="type">12</param>
+                <param name="enumClass">hrs.common.util.type.CreditRecordType</param>
+            </type>
+        </property>
+        
+        <property name="variation" type="double">
+            <column name="RECORD_VARIATION" />
+        </property>
+        <property name="currCredit" type="double">
+            <column name="RECORD_CURR_CREDIT" />
+        </property>
+        
+        <property name="date" type="java.util.Date">
+        	<column name="RECORD_DATE"></column>
+        </property>
+        
+        
+    </class>
+</hibernate-mapping>

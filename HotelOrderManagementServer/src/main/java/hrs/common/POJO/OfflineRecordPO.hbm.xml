@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-10-28 18:09:30 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping package="hrs.common.POJO">
+    <class name="OfflineRecordPO" table="OFFLINE_RECORD">
+        <id name="id" type="int">
+            <column name="RECORD_ID" />
+            <generator class="native" />
+        </id>
+        <many-to-one name="hotel" class="HotelPO" fetch="join">
+            <column name="HOTEL_ID" />
+        </many-to-one>
+        <property name="checkinTime" type="java.util.Date">
+            <column name="record_checkin_time" />
+        </property>
+        <property name="expectedCheckoutTime" type="java.util.Date">
+            <column name="record_expected_checkout_time" />
+        </property>
+        <property name="checkoutTime" type="java.util.Date">
+            <column name="record_checkout_time" />
+        </property>
+        <property name="type">
+            <column name="room_type" />
+            <type name="org.hibernate.type.EnumType">
+                <param name="type">12</param>
+                <param name="enumClass">hrs.common.util.type.RoomType</param>
+            </type>
+        </property>
+        <property name="num" type="int">
+            <column name="room_num" />
+        </property>
+    </class>
+</hibernate-mapping>

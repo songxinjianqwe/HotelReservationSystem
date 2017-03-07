@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-10-28 18:09:30 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping package="hrs.common.POJO">
+	<class name="RoomPO" table="ROOM">
+		<composite-id>
+			<key-many-to-one name="hotel" class="HotelPO"
+				column="hotel_id"></key-many-to-one>
+			
+			<key-property name="type">
+				<column name="ROOM_TYPE" />
+				<type name="org.hibernate.type.EnumType">
+					<param name="type">12</param>
+					<param name="enumClass">hrs.common.util.type.RoomType</param>
+				</type>
+			</key-property>
+			
+		</composite-id>
+
+		<property name="roomNum" type="int">
+			<column name="ROOM_NUM" />
+		</property>
+		<property name="roomValue" type="double">
+			<column name="ROOM_VALUE" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-10-28 18:09:30 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping package="hrs.common.POJO">
+    <class name="StaffPO" table="STAFF">
+        <id name="id" type="int">
+            <column name="staff_id" />
+            <generator class="native" />
+        </id>
+        <property name="username" type="java.lang.String" unique="true">
+            <column name="STAFF_USERNAME" />
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="STAFF_PASSWORD" />
+        </property>
+        <property name="name" type="java.lang.String">
+            <column name="STAFF_NAME" />
+        </property>
+        <property name="type">
+            <column name="STAFF_TYPE" />
+            <type name="org.hibernate.type.EnumType">
+                <param name="type">12</param>
+                <param name="enumClass">hrs.common.util.type.StaffType</param>
+            </type>
+        </property>
+        
+        <many-to-one name="hotel" class="HotelPO" column="STAFF_HOTEL" unique="true" lazy="false">
+        </many-to-one>
+    </class>
+</hibernate-mapping>
